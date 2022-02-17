@@ -1,9 +1,13 @@
 const Usuario = require('../models/Usuario');
 
-const getUsuarios = (req, res) => {
+const getUsuarios = async (req, res) => {
+
+    //Obtiene listado de usuarios
+    const usuarios = await Usuario.find({}, 'nombre email role google');
+
     res.json({
         ok: true,
-        msg: 'getUsuarios'
+        usuarios
     });
 }
 
@@ -12,6 +16,7 @@ const crearUsuario = async (req, res) => {
 
     const usuario = new Usuario(req.body);
 
+    //Guarda el usuario en la BD
     await usuario.save();
 
     res.json({
