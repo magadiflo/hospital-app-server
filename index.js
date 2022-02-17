@@ -4,6 +4,13 @@ const express = require('express');
 const app = express();
 
 
+//Rutas
+app.get('/', (req, res) => {
+    res.json({
+        ok: true,
+        msg: 'Hola mundo',
+    });
+});
 
 
 
