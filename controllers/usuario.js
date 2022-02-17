@@ -51,7 +51,58 @@ const crearUsuario = async (req, res = response) => {
 
 }
 
+const actualizarUsuario = async (req, res = response) => {
+    
+    //TODO: Validar token y comprobar si es el usuario correcto
+
+    const uid = req.params.id;
+
+    try {
+
+        const usaurioDB = await Usuario.findById(uid);
+        if(!usaurioDB){
+            return res.status(404).json({
+                ok: false,
+                msg: "No existe un usuario por ese uid"
+            });
+        }
+        
+        // Actualizaciones
+        const campos = req.body;
+
+        if(usaurioDB.email === req.body.email) {
+            delete campos.email;
+        } else {
+            const existeEmail = await Usuario.findOne({ email: req.body.email });
+            if(existeEmail){
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Ya existe un usaurio con ese email',
+                });
+            }
+        }
+
+        delete campos.password; //Borrando del objeto campos el atributo password
+        delete campos.google;
+
+        const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true });
+
+        res.json({
+            ok: true,
+            usuario: usuarioActualizado
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado',
+        });    
+    }
+}
+
 module.exports = {
     getUsuarios,
-    crearUsuario
+    crearUsuario,
+    actualizarUsuario
 }
