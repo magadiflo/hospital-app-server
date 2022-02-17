@@ -1,4 +1,5 @@
 const { response } = require('express'); //Lo usaremos únicamente para obtener el tipado
+const { validationResult } = require('express-validator');
 const Usuario = require('../models/Usuario');
 
 
@@ -15,6 +16,15 @@ const getUsuarios = async (req, res) => {
 
 const crearUsuario = async (req, res = response) => {
     const { nombre, password, email } = req.body;
+
+    const errores = validationResult(req);
+    if(!errores.isEmpty()){
+        return res.status(400).json({
+            ok: false,
+            errors: errores.mapped()
+        });
+    }
+
 
     try {
 
