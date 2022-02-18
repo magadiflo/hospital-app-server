@@ -19,9 +19,9 @@ const crearUsuario = async (req, res = response) => {
 
     try {
 
-        const existeEmail = await Usuario.findOne({email});
+        const existeEmail = await Usuario.findOne({ email });
 
-        if(existeEmail) {
+        if (existeEmail) {
             return res.status(400).json({
                 ok: false,
                 msg: 'El correo ya está registrado'
@@ -33,14 +33,14 @@ const crearUsuario = async (req, res = response) => {
         //Encriptar contraseña
         const salt = bcrypt.genSaltSync();
         usuario.password = bcrypt.hashSync(password, salt);
-    
+
         //Guarda el usuario en la BD
         await usuario.save();
-    
+
         res.json({
             ok: true,
             usuario
-        });        
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -52,7 +52,7 @@ const crearUsuario = async (req, res = response) => {
 }
 
 const actualizarUsuario = async (req, res = response) => {
-    
+
     //TODO: Validar token y comprobar si es el usuario correcto
 
     const uid = req.params.id;
@@ -60,21 +60,19 @@ const actualizarUsuario = async (req, res = response) => {
     try {
 
         const usaurioDB = await Usuario.findById(uid);
-        if(!usaurioDB){
+        if (!usaurioDB) {
             return res.status(404).json({
                 ok: false,
                 msg: "No existe un usuario por ese uid"
             });
         }
-        
-        // Actualizaciones
-        const campos = req.body;
 
-        if(usaurioDB.email === req.body.email) {
-            delete campos.email;
-        } else {
-            const existeEmail = await Usuario.findOne({ email: req.body.email });
-            if(existeEmail){
+        // Actualizaciones
+        const { password, google, email, ...campos } = req.body;
+
+        if (usaurioDB.email !== email ) {
+            const existeEmail = await Usuario.findOne({ email });
+            if (existeEmail) {
                 return res.status(400).json({
                     ok: false,
                     msg: 'Ya existe un usaurio con ese email',
@@ -82,22 +80,20 @@ const actualizarUsuario = async (req, res = response) => {
             }
         }
 
-        delete campos.password; //Borrando del objeto campos el atributo password
-        delete campos.google;
-
+        campos.email = email;
         const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true });
 
         res.json({
             ok: true,
             usuario: usuarioActualizado
         });
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Error inesperado',
-        });    
+        });
     }
 }
 
