@@ -20,6 +20,7 @@ dbConnection();
 //Rutas
 //Cuando una petición vaya por esta ruta /api/usuarios/, será interceptada por el middleware de routes/usuarios.js
 app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/login', require('./routes/auth'));
 
 
 app.listen(process.env.PORT, () => {
