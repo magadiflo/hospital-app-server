@@ -14,10 +14,10 @@ const crearHospital = (req, res) => {
     });
 }
 
-const actualarHospital = (req, res) => {
+const actualizarHospital = (req, res) => {
     res.json({
         ok: true,
-        msg: 'actualarHospital'
+        msg: 'actualizarHospital'
     });
 }
 
@@ -31,6 +31,6 @@ const borrarHospital = (req, res) => {
 module.exports = {
     getHospitales,
     crearHospital,
-    actualarHospital,
+    actualizarHospital,
     borrarHospital,
 }

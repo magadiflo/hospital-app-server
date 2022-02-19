@@ -1,32 +1,32 @@
 /**
- * Hospitales
- * ruta: /api/hospitales
+ * Medicos
+ * ruta: /api/medicos
  */
  const { Router } = require('express');
  const { check } = require('express-validator');
  const { validarCampos } = require('../middlewares/validar-campos');
  const { validarJWT } = require('../middlewares/validar-jwt');
  const {
-    getHospitales,
-    crearHospital,
-    actualizarHospital,
-    borrarHospital,
-} = require('../controllers/hospitales');
+    getMedicos,
+    crearMedico,
+    actualizarMedico,
+    borrarMedico,
+} = require('../controllers/medicos');
  
  const router = Router();
  
- router.get('/', getHospitales);
+ router.get('/', getMedicos);
  
  router.post('/', [
 
- ], crearHospital);
+ ], crearMedico);
  
  router.put('/:id', [
 
- ], actualizarHospital);
+ ], actualizarMedico);
  
  router.delete('/:id', [
 
- ], borrarHospital);
+ ], borrarMedico);
  
  module.exports = router;
