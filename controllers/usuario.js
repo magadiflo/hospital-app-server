@@ -11,7 +11,8 @@ const getUsuarios = async (req, res) => {
 
     res.json({
         ok: true,
-        usuarios
+        usuarios,
+        //uid: req.uid //Este uid es establecida en el validar-jwt.js. De esa forma se puede acceder a información agregada en la petición
     });
 }
 
