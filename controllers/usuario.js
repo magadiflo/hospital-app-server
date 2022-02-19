@@ -1,6 +1,7 @@
 const { response } = require('express'); //Lo usaremos únicamente para obtener el tipado
 const bcrypt = require('bcryptjs');
 const Usuario = require('../models/Usuario');
+const { generarJWT } = require('../helpers/jwt');
 
 
 const getUsuarios = async (req, res) => {
@@ -37,9 +38,13 @@ const crearUsuario = async (req, res = response) => {
         //Guarda el usuario en la BD
         await usuario.save();
 
+        ////Generar el TOKEN - JWT
+        const token = await generarJWT(usuario.id);
+
         res.json({
             ok: true,
-            usuario
+            usuario,
+            token
         });
     } catch (error) {
         console.log(error);
