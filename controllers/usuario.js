@@ -6,12 +6,30 @@ const { generarJWT } = require('../helpers/jwt');
 
 const getUsuarios = async (req, res) => {
 
+    const desde = Number(req.query.desde) || 0;
+    console.log(desde);
     //Obtiene listado de usuarios
-    const usuarios = await Usuario.find({}, 'nombre email role google');
+    // const usuarios = await Usuario
+    //     .find({}, 'nombre email role google')
+    //     .skip(desde)
+    //     .limit(5);
+
+    // const total = await Usuario.count();
+
+    //Se espera que se resuelvan las dos promesas para continuar
+    //Es lo mismo que el código comentado arriba, pero más eficiente
+    const [ usuarios, total ] = await Promise.all([
+        Usuario
+        .find({}, 'nombre email role google')
+        .skip(desde)
+        .limit(5),
+        Usuario.count()
+    ]);
 
     res.json({
         ok: true,
         usuarios,
+        total
         //uid: req.uid //Este uid es establecida en el validar-jwt.js. De esa forma se puede acceder a información agregada en la petición
     });
 }
