@@ -3,7 +3,15 @@ const Usuario = require('../models/Usuario');
 const Medico = require('../models/Medico');
 const Hospital = require('../models/Hospital');
 
+const borrarImagen = (path) => {
+    if(fs.existsSync(path)){
+        //Borrar la imagen anterior
+        fs.unlinkSync(path);
+    }
+}
+
 const actualizarImagen = async (tipo, id, nombreArchivo) => {
+    let pathViejo = '';
     switch(tipo) {
         case 'medicos':
             const medico = await Medico.findById(id);
@@ -11,18 +19,38 @@ const actualizarImagen = async (tipo, id, nombreArchivo) => {
                 console.log('No se encontró médico por id');
                 return false;
             }
-            const pathViejo = `./uploads/medicos/${medico.img}`;
-            if(fs.existsSync(pathViejo)){
-                //Borrar la imagen anterior
-                fs.unlinkSync(pathViejo);
-            }
+            pathViejo = `./uploads/medicos/${medico.img}`;
+            borrarImagen(pathViejo);
+
             medico.img = nombreArchivo;
             await medico.save();
             return true;
+        
         case 'hospitales':
-        break;
+            const hospital = await Hospital.findById(id);
+            if(!hospital){
+                console.log('No se encontró hospital por id');
+                return false;
+            }
+            pathViejo = `./uploads/hospitales/${hospital.img}`;
+            borrarImagen(pathViejo);
+
+            hospital.img = nombreArchivo;
+            await hospital.save();
+            return true;
+            
         case 'usuarios':
-        break;
+            const usuario = await Usuario.findById(id);
+            if(!usuario){
+                console.log('No se encontró usuario por id');
+                return false;
+            }
+            pathViejo = `./uploads/usuarios/${usuario.img}`;
+            borrarImagen(pathViejo);
+
+            usuario.img = nombreArchivo;
+            await usuario.save();
+            return true;
     }        
 }
 
