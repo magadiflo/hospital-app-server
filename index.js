@@ -17,6 +17,9 @@ app.use(express.json());
 //Base de datos
 dbConnection();
 
+//Directorio público
+app.use(express.static('public'));
+
 //Rutas
 //Cuando una petición vaya por esta ruta /api/usuarios/, será interceptada por el middleware de routes/usuarios.js
 app.use('/api/usuarios', require('./routes/usuarios'));
