@@ -29,18 +29,59 @@ const crearMedico = async (req, res) => {
     }    
 }
 
-const actualizarMedico = (req, res) => {
-    res.json({
-        ok: true,
-        msg: 'actualizarMedico'
-    });
+const actualizarMedico = async (req, res) => {
+    const id = req.params.id;//El id del médico a actualizar
+    const uid = req.uid;//Establecido en el validar JWT
+    try {
+        const medico = await Medico.findById(id);
+        if(!medico){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Médico no encontrado'
+            });
+        }
+        const cambiosMedico = {
+            ...req.body,
+            usuario: uid,    
+        }
+
+        const medicoActualizado = await Medico.findByIdAndUpdate(id, cambiosMedico, { new: true });
+
+        res.json({
+            ok: true,
+            medico: medicoActualizado,
+        });
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
 }
 
-const borrarMedico = (req, res) => {
-    res.json({
-        ok: true,
-        msg: 'borrarMedico'
-    });
+const borrarMedico = async (req, res) => {
+    const id = req.params.id;//El id del médico a actualizar
+    try {
+        const medico = await Medico.findById(id);
+        if(!medico){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Médico no encontrado'
+            });
+        }
+        
+        await Medico.findByIdAndDelete(id);
+
+        res.json({
+            ok: true,
+            msg: 'Médico eliminado',
+        });
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
 }
 
 module.exports = {
