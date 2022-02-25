@@ -30,7 +30,7 @@
  ], actualizarHospital);
  
  router.delete('/:id', [
-
+    validarJWT,
  ], borrarHospital);
  
  module.exports = router;
