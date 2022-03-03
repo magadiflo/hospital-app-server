@@ -4,12 +4,13 @@ const { response } = require('express');
 const { v4: uuidv4 } = require('uuid');
 const { actualizarImagen } = require('../helpers/actualizar-imagen');
 
+const tiposValidos = ['hospitales', 'medicos', 'usuarios'];
+
 const fileUpload = (req, res = response) => {
     const tipo = req.params.tipo;
     const id = req.params.id;
 
     //Validar tipo
-    const tiposValidos = ['hospitales', 'medicos', 'usuarios'];
     if (!tiposValidos.includes(tipo)) {
         return res.status(400).json({
             ok: false,
@@ -76,7 +77,8 @@ const retornaImagen = (req, res = response) => {
     if(fs.existsSync(pathImg)){
         res.sendFile(pathImg);
     } else {
-        pathImg = path.join(__dirname, `../uploads/no-img.png`);
+        const showNoImage = (tiposValidos[2] === tipo) ? 'no-image-user.png' : 'no-img.png'; //tipo = usuarios
+        pathImg = path.join(__dirname, `../uploads/${showNoImage}`);
         res.sendFile(pathImg);
     }
 }
