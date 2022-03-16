@@ -49,7 +49,7 @@ const getDocumentosColeccion = async (req, res = response) => {
 
     res.json({
         ok: true,
-        resultdos: data
+        resultados: data
     });
 }
 
